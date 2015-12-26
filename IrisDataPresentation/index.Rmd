@@ -1,0 +1,85 @@
+---
+title       : Exploring Datasets
+subtitle    : Better Visualizations for Predicting Iris Species
+author      : Sean Miller
+job         : 
+framework   : io2012   # {io2012, html5slides, shower, dzslides, ...}
+highlighter : highlight.js  # {highlight.js, prettify, highlight}
+hitheme     : tomorrow      # 
+widgets     : []            # {mathjax, quiz, bootstrap}
+mode        : selfcontained # {standalone, draft}
+knit        : slidify::knit2slides
+---
+
+## Exploring Datasets
+
+* You want to better understand the aspects of different species of iris
+* Your current strategy dumps out the data in a flat table
+
+```{r, echo=FALSE}
+head(iris)
+```
+
+* This application simplifies the headaches of learning about your data
+
+--- 
+
+## Simplifying Exploratory Analysis
+
+* Selecting different predictors from dropdown menus allows the user to create plots
+like the one below in real time without any knowledge of programming.
+
+```{r, echo=FALSE}
+iris_dataset = iris
+# Create variables to plot
+x = iris_dataset[, "Sepal.Length"]
+y = iris_dataset[, "Sepal.Width"]
+s = iris_dataset[, "Species"]
+
+title = paste("Sepal.Length", "vs", "Sepal.Width", sep = " ")
+
+# Concat x, y, and s together to create dataset for our model
+iris_data = cbind(s, x, y)
+
+# Draw the base scatter plot
+plot(x, y, type = "n", xlab = "Sepal.Length", ylab = "Sepal.Width", 
+     main = title)
+
+# Draw each of the points
+points(x[s == "setosa"], y[s == "setosa"], col="darkgreen", pch=1)
+points(x[s == "versicolor"], y[s == "versicolor"], col="red", pch=2)
+points(x[s == "virginica"], y[s == "virginica"], col="dodgerblue4", pch=3)
+
+# Draw the legend
+legend("topright", 
+       legend = c("setosa", "versicolor", "virginica"), 
+       col=c("darkgreen","red","dodgerblue4"),
+       pch = c(1,2,3))
+```
+
+---
+
+## Gamifying Exploration
+
+* One of the fun features of this tool is that you can make predictions based on
+an x and y input and see if your expected outcome matches the model built over the dataset.
+
+```
+# Build the prediction
+x = as.double(input$x_pred)
+y = as.double(input$y_pred)
+iris_predict = as.data.frame(cbind(x, y))
+
+# Fit an rpart model
+modFit = train(s ~ ., method = "rpart", data=iris)
+
+# Round the prediction to the nearest factor values
+prediction = round(predict(modFit, iris_predict))
+```
+
+---
+
+## Further Uses
+
+1. Changing out minimal backend code allows you to map this example to different datasets.
+2. The code could be extended to allow the user to change the outcome they want to predict.
