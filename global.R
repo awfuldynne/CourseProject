@@ -10,3 +10,10 @@ variables <- c(
     "Petal.Length",
     "Petal.Width"
 )
+
+# Iris species
+predictions <- c(
+    "setosa",
+    "versicolor",
+    "virginica"
+)
